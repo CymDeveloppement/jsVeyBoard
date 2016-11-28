@@ -3,3 +3,16 @@
  * Copyright 2016 SARL CYM DEVELOPPEMENT.
  * Licensed under the GPL v3
  */
+
+ .btn-jsveyboard{
+ 	margin: 5px;
+ }
+ .blankJsveyboard{
+ 	opacity: 0;
+ 	cursor: initial;
+ }
+ .jsVeyboardBlock{
+ 	position: absolute;
+ 	text-align: center;
+ 	display: none;
+ }
