@@ -5,7 +5,8 @@
  */
 
  .btn-jsveyboard{
- 	margin: 5px;
+ 	margin: 3px;
+ 	font-weight: bold;
  }
  .blankJsveyboard{
  	opacity: 0;
@@ -15,4 +16,6 @@
  	position: absolute;
  	text-align: center;
  	display: none;
+ 	background-color: rgba(255,255,255,0.7);
+ 	border-radius: 5px;
  }

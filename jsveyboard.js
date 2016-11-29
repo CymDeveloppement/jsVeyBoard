@@ -37,8 +37,9 @@ function makeKeyboard(id, style, UID)
 
 function makeButton(name, style, UID)
 {
+	classUID = 'jsveyboardClass'+UID;
 	
-	effectiveClass = 'btn-jsveyboard ';
+	effectiveClass = classUID + ' btn-jsveyboard ';
 	if (name == 'BLANK') {
 		effectiveName = '';
 		effectiveClass = effectiveClass + 'blankJsveyboard ';
@@ -46,51 +47,109 @@ function makeButton(name, style, UID)
 		effectiveName = name;
 	}
 
+	if (name.length == 1) {
+		
+		effectiveClass = effectiveClass + ' oneCharButton' + UID + ' ';
+	}
+
 	effectiveClass = effectiveClass + style.btnstyle;
+	
 	actionButton = "keyPress('" + name + "', '" + UID + "');";
+
+	dataAttr = '';
+	minwidth = '';
 
 	if (getSpecialKey(name).hasOwnProperty('icon')) {
 		 effectiveName = '<span class="glyphicon ' + getSpecialKey(name).icon + '" aria-hidden="true"></span>';
 	}
 
+	if (getSpecialKey(name).hasOwnProperty('name')) {
+		 effectiveName = getSpecialKey(name).name;
+	}
+
+	if (getSpecialKey(name).hasOwnProperty('minwidth')) {
+		 minwidth = 'min-width:' + getSpecialKey(name).minwidth + 'px;';
+	}
+
 	if (getSpecialKey(name).hasOwnProperty('onClick')) {
-		 actionButton = getSpecialKey(name).onClick + "('" + UID + "')";
+		 actionButton = getSpecialKey(name).onClick + "('" + UID + "', $(this))";
 	}
 
 	if (getSpecialKey(name).hasOwnProperty('style')) {
-		 effectiveClass = 'btn-jsveyboard ' + getSpecialKey(name).style;
+		 effectiveClass = classUID + ' btn-jsveyboard ' + getSpecialKey(name).style;
+	}
+
+	if (getSpecialKey(name).hasOwnProperty('data')) {
+		 dataAttr = 'data-keys="' + getSpecialKey(name).data + '"';
 	}
 	
-	return '<div class="' + effectiveClass + '" onclick="' + actionButton + '">' + effectiveName + '</div>';
+	return '<div class="' + effectiveClass + '" onclick="' + actionButton + '" ' + dataAttr + ' style="' + minwidth + '">' + effectiveName.replace(/\\/g, '') + '</div>';
 }
 
 function dispKeyboard(id, keyboard, style, UID)
 {
 
 	$(keyboard).insertAfter(id);
-	//alert();
-	jsVeyboardPosition = $(id).position().left - (($('#pad' + UID).width() - $(id).width()) / 2);
-	$('#pad' + UID).css('left',jsVeyboardPosition);
+	
 
 	if (style.show == 'always') {
 		$('#pad' + UID).css('display','block');
+		$('<div style="height:' + $('#pad' + UID).height() + 'px;"></div>').insertAfter('#pad'+UID);
+		setKeySize(UID, style);
+
+		
+
 	}
 
 	if (style.show == 'focus') {
 
-		$('#'+UID).focus(function() {
-		  //$('#pad' + UID).css('display','block');
-		  $('#pad' + UID).fadeIn('600');
-		  console.log($('#'+UID).scrollTop());
-		  $('html, body').animate( { scrollTop: ($('#'+UID).position().top + $('#pad' + UID).height()) }, 2000);
+		$('.jsveyboardClass'+UID).click(function(){
+			jsVeyBoardNoFadeOut = 1;
 		});
 
-		$('#'+UID).focusout(function() {
-		  $('html, body').animate( { scrollTop: ($('#'+UID).position().top - $('#pad' + UID).height()) }, 2000);
-		  $('#pad' + UID).fadeOut('600');
+		$('#'+UID).focus(function() {
+			$('#pad' + UID).fadeIn('600');
+			$('html, body').animate( { scrollTop: ($('#'+UID).position().top + $('#pad' + UID).height()) }, 2000);
+			setKeySize(UID, style);
+			setLeftPosition(UID);
+		});
+
+
+		$('#'+UID).focusout(function(e) {
+		  //$('html, body').animate( { scrollTop: ($('#'+UID).position().top - $('#pad' + UID).height()) }, 2000);
+		 setTimeout(function(){ lostFocus(UID); }, 1000);
 		});
 		
 	}
+
+	setLeftPosition(UID);
+	
+}
+
+function setKeySize(UID, style)
+{
+	if (style.hasOwnProperty('btnwidth')) {
+		$('.oneCharButton'+UID).width(style.btnwidth);
+	} else {
+		maxSize = 0;
+		$('.oneCharButton'+UID).each(function() {
+			if ($(this).width() > maxSize) {maxSize = $(this).width()}
+		});
+		$('.oneCharButton'+UID).width(maxSize);
+	}
+
+	height = 0;
+	$('.jsveyboardClass'+UID).each(function() {
+		if ($(this).height() > height) {height = $(this).height()}
+	});
+	$('.jsveyboardClass'+UID).height(height);
+}
+
+function setLeftPosition(UID)
+{
+	jsVeyboardPosition = $('#' + UID).position().left - (($('#pad' + UID).width() - $('#' + UID).width()) / 2);
+	$('#pad' + UID).css('left',jsVeyboardPosition);
+
 }
 
 function getSpecialKey(name)
@@ -106,23 +165,72 @@ function keyPress(key, id)
 {
 	$('#'+id).val($('#'+id).val() + key);
 }
-function backSpace(id)
+
+function backSpace(id, caller)
 {
-	alert(id);
+	$('#'+id).val($('#'+id).val().slice(0,-1));
 }
+
+function space(id, caller)
+{
+	$('#'+id).val($('#'+id).val() + ' ');
+	console.log('SPACE');
+}
+
+function shift(id, caller)
+{
+	console.log(caller.attr('data-keys'));
+
+	if (caller.attr('data-keys') == 'lower') {
+		$('.oneCharButton'+id).each(function(){
+				$(this).html($(this).html().toUpperCase());
+				$(this).attr('onclick', "keyPress('" + $(this).html().toUpperCase() + "', '" + id + "');");
+				$(caller).attr('data-keys', 'upper');
+		});
+	}else if (caller.attr('data-keys') == 'upper') {
+		$('.oneCharButton'+id).each(function(){
+			$(this).html($(this).html().toLowerCase());
+			$(this).attr('onclick', "keyPress('" + $(this).html().toLowerCase() + "', '" + id + "');");
+			$(caller).attr('data-keys', 'lower');
+		});
+	}
+}
+
+function lostFocus(id)
+{
+	if (jsVeyBoardNoFadeOut == 0) {
+		$('#pad' + id).fadeOut('600');
+	} else {
+		$('#'+id).focus();
+		jsVeyBoardNoFadeOut = 0;
+	}
+}
+
+
 
 Pattern = {
 			MOBILE: {
 						'line1': ['1','2','3'],
 						'line2': ['4','5','6'],
 						'line3': ['7','8','9'],
-						'line4': ['UNDO','0','OK']
+						'line4': ['UNDO','0','CHECK']
 					},
-			MOBILE2: {
-						'line1': ['1','2','3','4','5'],
-						'line2': ['6','7','8','9','0'],
-						'line3': ['BLANK','BLANK','BLANK','UNDO','OK']
-					}			
+			MOBILEONE: {
+						'line1': ['1','2','3','4','5','6','7','8','9','0','CHECK']
+					},
+			AZERTY: {
+						'line1': ['a','z','e','r','t','y','u','i','o','p','UNDO'],
+						'line2': ['SHIFT','q','s','d','f','g','h','j','k','l','m'],
+						'line3': ['w','x','c','v','b','n','OK'],
+						'line4': ['SPACE']
+					},
+			AZERTYFULL: {
+						'line0': ['1','2','3','4','5','6','7','8','9','0','@'],
+						'line1': ['a','z','e','r','t','y','u','i','o','p','UNDO'],
+						'line2': ['SHIFT','q','s','d','f','g','h','j','k','l','m'],
+						'line3': ['w','x','c','v','b','n','\\\'',';','.'],
+						'line4': ['BLANK','SPACE','OK']
+					}
 };
 
 SpecialKeys = {
@@ -133,8 +241,26 @@ SpecialKeys = {
 				},
 				OK: {
 					onClick: '',
-					icon: 'glyphicon-ok'
+					icon: 'glyphicon-ok',
+					style: 'btn btn-lg btn-success',
+					name: 'Suivant'
+				},
+				CHECK: {
+					onClick: '',
+					icon: 'glyphicon-ok',
+					style: 'btn btn-lg btn-success'
+				},
+				SHIFT: {
+					onClick: 'shift',
+					icon: 'glyphicon-arrow-up',
+					data: 'lower'
+				},
+				SPACE: {
+					onClick: 'space',
+					minwidth: '300',
+					name: ''
 				}
 }
 
 jsVeyBoardNumber = 0;
+jsVeyBoardNoFadeOut = 0;
