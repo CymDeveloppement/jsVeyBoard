@@ -81,6 +81,23 @@
       <div id="qwert" class="starter-template">
       	<h1>Qwerty Keyboard</h1>
         <p class="lead">Simple Qwerty keyboard.</p>
+
+                <!-- HTML generated using hilite.me -->
+        <div class="codeContent" style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #a6e22e">jsveyboard</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;#qwertyInput&#39;</span><span style="color: #f8f8f2">,</span>
+<span style="color: #f8f8f2">{</span>
+        <span style="color: #a6e22e">style</span><span style="color: #f92672">:</span> <span style="color: #e6db74">&#39;QWERTY&#39;</span><span style="color: #f8f8f2">,</span>
+        <span style="color: #a6e22e">btnstyle</span><span style="color: #f92672">:</span> <span style="color: #e6db74">&#39;btn btn-lg btn-primary&#39;</span><span style="color: #f8f8f2">,</span>
+	<span style="color: #a6e22e">show</span><span style="color: #f92672">:</span> <span style="color: #e6db74">&#39;always&#39;</span>
+<span style="color: #f8f8f2">});</span>
+</pre></div>
+			<br>
+			<hr>
+        	<form>
+		  		<div class="form-group">
+		    		<input type="text" name="qwerty" id="qwertyInput" placeholder=""> 
+		  		</div>
+		  	</form>
+
       </div>
 
       <div id="azertfull" class="starter-template">
@@ -150,6 +167,32 @@
 			<hr>
       </div>
 
+
+
+      <div id="mobile" class="starter-template">
+      	<h1>Display on Focus</h1>
+        <p class="lead">Use 'focus' display keyboard on focus..</p>
+        <p>
+        	<form>
+		  		<div class="form-group">
+		    		<input type="text" name="mobilePhoneInputFocusN" id="mobilePhoneInputFocus" placeholder="0600000000"> 
+		  		</div>
+		  	</form>
+        	
+        </p>
+
+          <!-- HTML generated using hilite.me -->
+        <div class="codeContent" style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #a6e22e">jsveyboard</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;#mobilePhoneInputFocus&#39;</span><span style="color: #f8f8f2">,</span>
+<span style="color: #f8f8f2">{</span>
+        <span style="color: #a6e22e">style</span><span style="color: #f92672">:</span> <span style="color: #e6db74">&#39;MOBILE&#39;</span><span style="color: #f8f8f2">,</span>
+        <span style="color: #a6e22e">btnstyle</span><span style="color: #f92672">:</span> <span style="color: #e6db74">&#39;btn btn-lg btn-primary&#39;</span><span style="color: #f8f8f2">,</span>
+	<span style="color: #a6e22e">show</span><span style="color: #f92672">:</span> <span style="color: #e6db74">&#39;focus&#39;</span>
+<span style="color: #f8f8f2">});</span>
+</pre></div>
+			<br>
+			<hr>
+      </div>
+
     </div><!-- /.container -->
 
 
@@ -181,11 +224,21 @@
 		});
 		jsveyboard('#mobilePhoneInputOne', {
 			style: 'MOBILEONE',
-			btnstyle: 'btn btn-lg btn-success',
+			btnstyle: 'btn btn-lg btn-primary',
 			show: 'always'
+		});
+		jsveyboard('#mobilePhoneInputFocus', {
+			style: 'MOBILE',
+			btnstyle: 'btn btn-lg btn-primary',
+			show: 'focus'
 		});
 		jsveyboard('#azertyInput', {
 			style: 'AZERTY',
+			btnstyle: 'btn btn-lg btn-primary',
+			show: 'always'
+		});
+		jsveyboard('#qwertyInput', {
+			style: 'QWERTY',
 			btnstyle: 'btn btn-lg btn-primary',
 			show: 'always'
 		});

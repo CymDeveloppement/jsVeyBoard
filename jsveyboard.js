@@ -148,7 +148,7 @@ function setKeySize(UID, style)
 function setLeftPosition(UID)
 {
 	jsVeyboardPosition = $('#' + UID).position().left - (($('#pad' + UID).width() - $('#' + UID).width()) / 2);
-	$('#pad' + UID).css('left',jsVeyboardPosition);
+	$('#pad' + UID).css('left',jsVeyboardPosition-20);
 
 }
 
@@ -224,13 +224,27 @@ Pattern = {
 						'line3': ['w','x','c','v','b','n','OK'],
 						'line4': ['SPACE']
 					},
+			QWERTY: {
+						'line1': ['q','w','e','r','t','y','u','i','o','p','UNDO'],
+						'line2': ['SHIFT','a','s','d','f','g','h','j','k','l'],
+						'line3': ['z','x','c','v','b','n','m','OK'],
+						'line4': ['SPACE']
+					},
 			AZERTYFULL: {
 						'line0': ['1','2','3','4','5','6','7','8','9','0','@'],
 						'line1': ['a','z','e','r','t','y','u','i','o','p','UNDO'],
 						'line2': ['SHIFT','q','s','d','f','g','h','j','k','l','m'],
 						'line3': ['w','x','c','v','b','n','\\\'',';','.'],
 						'line4': ['BLANK','SPACE','OK']
+					},
+			QWERTYFULL: {
+						'line0': ['1','2','3','4','5','6','7','8','9','0','@'],
+						'line1': ['q','w','e','r','t','y','u','i','o','p','UNDO'],
+						'line2': ['SHIFT','a','s','d','f','g','h','j','k','l',';'],
+						'line3': ['z','x','c','v','b','n','m','\\\'','.'],
+						'line4': ['BLANK','SPACE','OK']
 					}
+
 };
 
 SpecialKeys = {
